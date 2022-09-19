@@ -1,0 +1,8 @@
+ressourceOne,probabilityOne,ressourceTwo,probabilityTwo,ressourceThree,probabilityThree,answerResOne,answerResTwo,answerResThree
+whool,2,stone,9,lumber,5,clay,whool,corn
+stone,10,corn,4,whool,11,clay,whool,lumber
+whool,5,corn,7,clay,8,lumber,stone,stone
+lumber,12,stone,3,corn,4,clay,whool,corn
+clay,5,corn,9,lumber,10,whool,clay,stone
+corn,5,corn,9,clay,10,lumber,stone,stone
+whool,2,clay,5,stone,3,corn,corns,lumber

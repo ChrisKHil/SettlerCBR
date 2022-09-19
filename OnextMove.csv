@@ -1,0 +1,5 @@
+numberTown,numberCity,clay,corn,lumber,stone,whool,buildPiece,ressourceOne,ressourceTwo,ressourceThree
+2,0,1,3,2,2,0,city,corn,stone,clay
+0,2,1,1,2,2,0,town,lumber,clay,corn
+1,1,0,2,1,0,1,town,clay,stone,corn
+1,1,1,1,1,1,1,lumber,lumber,lumber,lumber

@@ -44,7 +44,7 @@ public class NextMoveCases {
 			"stone","whool","buildPiece","ressourceOne","ressourceTwo","ressourceThree"};
 	
 	//variables for the import of the csv that contains the instances for the case base
-	private static String csv = "NextMove.csv";
+	private static String csv = "nextMove.csv"; //fix note: prio to the fix the string was "NextMove.csv", this file doesnt exist
 	private static String valueSeparator = ",";
 	
 	//initialize case base
@@ -125,7 +125,7 @@ public class NextMoveCases {
 			}
 		}
 		
-		System.out.println(id + " Fälle erstellt");
+		System.out.println(id + " Fï¿½lle erstellt");
 		
 		br.close();
 	}

@@ -259,7 +259,7 @@ public class TradingUtils {
 	}
 	/*
 	 * fix note: prior to the fix the method created an int cooosen = 6 and then tried to access the harbourTradeArray at
-	 * index 6, which caused a ń out of bounds exception every time
+	 * index 6, which caused an out of bounds exception every time 
 	 * this method returns an array that contains zeros except for the index that contains the best trade rate
 	 * and that the player has enaugh resources to trade for. I am not sure if this is intended but it seemed that way
 	 * prior to the fix

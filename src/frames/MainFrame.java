@@ -113,7 +113,7 @@ public class MainFrame extends JFrame implements BoardListener {
 		
 		leftPanel = new JPanel();
 		leftPanel.setPreferredSize(
-				new Dimension((int)(this.getContentPane().getPreferredSize().width*0.2), 
+				new Dimension((int)(this.getContentPane().getPreferredSize().width*0.3), 
 						(int)(this.getContentPane().getPreferredSize().height)));
 		this.add(leftPanel, BorderLayout.WEST);
 		System.out.println("bottom Heigth: " + (int)(this.getPreferredSize().height * 0.2));
@@ -141,7 +141,7 @@ public class MainFrame extends JFrame implements BoardListener {
 		String[] KIColors = new String[KI_COUNT];
 		for (int i = 0; i < PLAYERCOUNT; i++) {
 			player.add(new Player(drawRandomColor()));
-			//Define how many KI´s active (later adjustable)
+			//Define how many KIï¿½s active (later adjustable)
 			if (i < KI_COUNT) {
 				player.get(i).setKI(true);
 				KIColors[i] = ColorUtils.colorToString(player.get(i).getColor());
@@ -225,7 +225,7 @@ public class MainFrame extends JFrame implements BoardListener {
 		evaluateAgentMessage(message);
 		System.out.println("       "+ " Turn end on: " + message.getAction());
 			
-//		System.out.println("I´m Out of my Loop and the game did not pass a turn properly ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		System.out.println("Iï¿½m Out of my Loop and the game did not pass a turn properly ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 	}
 	/**
 	 * Due to the nature of the Objects returned in the messages it is nessesary to determine the local counterpart to the choosen object as call by reference does not

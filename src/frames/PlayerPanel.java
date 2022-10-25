@@ -1,6 +1,7 @@
 package frames;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
@@ -157,8 +158,11 @@ public class PlayerPanel extends JPanel implements BoardListener{
 		repaint();
 	}
 	
-	public void win(String color) {
-		victory.setText("WINNER IS " + color);
+	public void win(Color color) {
+		if(player.getColor().equals(color)) {
+			victory.setText("WINNER");
+		} else {
+			victory.setText("LOSER");
+		}
 	}
-	
 }

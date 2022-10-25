@@ -502,6 +502,9 @@ public class MainFrame extends JFrame implements BoardListener {
 		case BUILD:
 			if (getActivePlayer().getVictoryPoints() >= 10) {
 				setStage(TurnStage.END_OF_GAME);
+				for(PlayerPanel p:playerpanels) {
+					p.win(getActivePlayer().getColor().toString());
+				}
 				//Dialogue for the end? Replay option?
 			} else {
 				setStage(TurnStage.ROLL_DICE);

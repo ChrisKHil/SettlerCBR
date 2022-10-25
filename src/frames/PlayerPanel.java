@@ -28,6 +28,10 @@ public class PlayerPanel extends JPanel implements BoardListener{
 	
 	private JPanel winPointsPanel;
 	
+	private JPanel vPointsPanel;
+	
+	private JPanel victoryPanel;
+	
 	private JLabel playerLabel;
 	
 	private JLabel lumberLabel;
@@ -43,6 +47,10 @@ public class PlayerPanel extends JPanel implements BoardListener{
 	private JLabel mostKnights;
 	
 	private JLabel longestStreet;
+	
+	private JLabel playerVP;
+	
+	private JLabel victory;
 	
 	private JTextArea lumberArea;
 	
@@ -62,12 +70,20 @@ public class PlayerPanel extends JPanel implements BoardListener{
 	
 	private void init() {
 		statPanel = new JPanel();
-		statPanel.setLayout(new GridLayout(2,1));
+		statPanel.setLayout(new GridLayout(4,1));
 		this.add(statPanel, BorderLayout.SOUTH);
 		
 		winPointsPanel = new JPanel();
 		winPointsPanel.setLayout(new FlowLayout());
 		statPanel.add(winPointsPanel);
+		
+		vPointsPanel = new JPanel();
+		vPointsPanel.setLayout(new FlowLayout());
+		statPanel.add(vPointsPanel);
+		
+		victoryPanel = new JPanel();
+		victoryPanel.setLayout(new FlowLayout());
+		statPanel.add(victoryPanel);
 		
 		playerLabel = new JLabel(ColorUtils.colorToString(player.getColor()));
 		winPointsPanel.add(playerLabel);
@@ -77,6 +93,13 @@ public class PlayerPanel extends JPanel implements BoardListener{
 		
 		longestStreet = new JLabel("Street (VP): " + player.getHastLongestStreet());
 		winPointsPanel.add(longestStreet);
+		
+		playerVP = new JLabel("Victory Points: ");
+		vPointsPanel.add(playerVP);
+		
+		victory = new JLabel("");
+		victoryPanel.add(victory);
+		
 		
 		ressourcePanel = new JPanel();
 		ressourcePanel.setLayout(new FlowLayout());
@@ -125,12 +148,17 @@ public class PlayerPanel extends JPanel implements BoardListener{
 		clayArea.setText(Integer.toString(player.getClay()));
 		mostKnights.setText("Knights (VP): " + player.getHasMostKnights());
 		longestStreet.setText("Street (VP): " + player.getHastLongestStreet());
+		playerVP.setText("Victory Points: " + Integer.toString(player.getVictoryPoints()));
 	}
 
 	@Override
 	public void boardEventHappened(BoardEvent event) {
 		updateValues();	
 		repaint();
+	}
+	
+	public void win(String color) {
+		victory.setText("WINNER IS " + color);
 	}
 	
 }

@@ -127,9 +127,11 @@ public class TradingUtils {
 		if (choosenPlayer != null) {
 			Random rand = new Random();
 			List<LandType> tempArrayList =  createShuffleList(choosenPlayer);
-			LandType choosenPick = tempArrayList.get(rand.nextInt(tempArrayList.size()));
-			activePlayer.addRessourceByEnum(choosenPick, false);
-			choosenPlayer.reduceRessourceByEnum(choosenPick);
+			if(tempArrayList.size() > 0) {
+				LandType choosenPick = tempArrayList.get(rand.nextInt(tempArrayList.size()));
+				activePlayer.addRessourceByEnum(choosenPick, false);
+				choosenPlayer.reduceRessourceByEnum(choosenPick);
+			}
 		}
 	}
 	/**

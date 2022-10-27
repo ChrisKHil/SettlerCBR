@@ -334,7 +334,12 @@ public class CBRPlayerAgent extends Agent {
 			}
 			if (c == null) {
 				//Delibarate which city.
-				possibleCities.sort((CityNode n, CityNode b) -> calculateCityNodePreference(n) - calculateCityNodePreference(b) );
+				//Spielt unser neuer Agent, so wird die neue CityNodePreference Methode aufgerufen.
+				if(name.equals("Blue")) {
+					possibleCities.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW(n) - calculateCityNodePreferenceNEW(b) );
+				} else {
+					possibleCities.sort((CityNode n, CityNode b) -> calculateCityNodePreference(n) - calculateCityNodePreference(b) );
+				}
 				c = possibleCities.get(0);
 			}
 			message.setAction(AgentActionSettler.PLACE_FIRST_TURN_TOWN);
@@ -805,6 +810,43 @@ public class CBRPlayerAgent extends Agent {
 				pref -= 2;
 				break;
 		}
+		return pref;
+	}
+	
+	//Neue Methode für Güte der Nodes bestimmen. Wahrscheinlichkeit hat mehr Gewichtung und Desert und Harbor wird nahezu ausgeschlossen.
+	private int calculateCityNodePreferenceNEW(CityNode c){
+		int pref = 0;
+		for (Tile t : frame.getTilesByCity(c) ) {
+			if (t instanceof LandTile) {
+				pref += 2*(Math.abs(7 - ((LandTile)t).getNumber()));
+				if (((LandTile)t).getType() == LandType.STONE) {
+					pref += 1;
+				}
+				if (((LandTile)t).getType() == LandType.CLAY || ((LandTile)t).getType() == LandType.LUMBER) {
+					pref -= 1;
+				}
+				if (((LandTile)t).getType() == LandType.DESERT) {
+					pref += 100;
+				}
+			} else {
+				//it is very bad to place a city wiht only one ore two resource fields and not having a harbour.
+				pref += 100;
+			}
+		}
+		
+		/*switch (c.getHarbourType()) {
+			case THREE_TO_ONE:
+				//Offsetting the +7 for the harbourtile and an additional as better trades are nice.
+				pref -= 1;
+				break;
+			case NONE:
+				pref += 1;
+				break;
+			default:
+				//Single resource trade is kind of better?
+				pref -= 2;
+				break;
+		}*/
 		return pref;
 	}
 	

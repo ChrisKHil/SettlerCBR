@@ -762,7 +762,26 @@ public class CBRPlayerAgent extends Agent {
 					toDiscard.add(TradingUtils.getTypes()[i]);
 				}
 			}
-
+			
+			while(toDiscard.size() != numberToDiscard){
+				if(toDiscard.size() < numberToDiscard) {
+					toDiscard.removeAll(toDiscard);
+					int rand = AgentUtils.randomChoice(5);
+					if (discardDifference[rand] > 0) {
+						toDiscardArray[rand]++;
+						discardDifference[rand]--;
+					}
+					for (int i = 0; i < 5; i++) {
+						for (int j = 0; j < toDiscardArray[i]; j++) {
+							//von j zu i geändert, Da j die Anzahl einer Ressource ist, nicht die Ressource selbst
+							toDiscard.add(TradingUtils.getTypes()[i]);
+						}
+					}
+				} else {
+					toDiscard.remove(0);
+				}
+			}
+			
 		} else {
 			toDiscard = randomDiscardDebug(p, numberToDiscard);
 		}
@@ -823,7 +842,7 @@ public class CBRPlayerAgent extends Agent {
 		int pref = 0;
 		for (Tile t : frame.getTilesByCity(c) ) {
 			if (t instanceof LandTile) {
-				pref += 2*(Math.abs(7 - ((LandTile)t).getNumber()));
+				pref += 3*(Math.abs(7 - ((LandTile)t).getNumber()));
 				if (((LandTile)t).getType() == LandType.STONE) {
 					pref += 1;
 				}

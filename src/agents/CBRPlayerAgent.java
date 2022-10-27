@@ -743,6 +743,9 @@ public class CBRPlayerAgent extends Agent {
 				discardDifference[i] = ressourcesOwned[i] - toDiscardArray[i];
 				if(discardDifference[i] < 0) {
 					redistribute += (discardDifference[i] *-1);
+					//Ressourcen, die der Spieler zu wenig hat um sie abzuwerfen, werden auch aus dem toDiscardArray entfernt. 
+					toDiscardArray[i] += discardDifference[i];
+
 				}
 			}
 			while(redistribute > 0) {
@@ -755,9 +758,11 @@ public class CBRPlayerAgent extends Agent {
 			}
 			for (int i = 0; i < 5; i++) {
 				for (int j = 0; j < toDiscardArray[i]; j++) {
-					toDiscard.add(TradingUtils.getTypes()[j]);
+					//von j zu i geändert, Da j die Anzahl einer Ressource ist, nicht die Ressource selbst
+					toDiscard.add(TradingUtils.getTypes()[i]);
 				}
 			}
+
 		} else {
 			toDiscard = randomDiscardDebug(p, numberToDiscard);
 		}

@@ -86,7 +86,7 @@ public class Player implements Serializable{
 	
 	@Override
 	public String toString() {
-		String temp = color.toString() + "\nRessources:\n " +  " Clay: " + clay + " Corn " + corn + " Lumber: " + lumber + " Stone: " + stone + " Whool: " + whool;		
+		String temp = color.toString() + "\nRessources:\n " +  " Clay: " + clay + " Corn: " + corn + " Lumber: " + lumber + " Stone: " + stone + " Whool: " + whool;		
 		return temp;
 	}
 	

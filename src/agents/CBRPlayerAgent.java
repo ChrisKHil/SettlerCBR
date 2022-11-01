@@ -330,7 +330,11 @@ public class CBRPlayerAgent extends Agent {
 				System.out.println("Name: " + name.substring(0,1));
 				String solution = FirstMoveCB.agentQuery(pair.getResources(), pair.getProbabilities(), name.substring(0,1));
 				System.out.println("Solution: " + solution);
-				c = frame.findFittingNode(solution);
+				if(name.equals("Blue")) {
+					c = frame.findFittingNodeNEW(solution);
+				} else {
+					c = frame.findFittingNode(solution);
+				}
 			}
 			if (c == null) {
 				//Delibarate which city.

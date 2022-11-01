@@ -193,6 +193,13 @@ public class MainFrameWrapper {
 					break;
 				}
 			}
+		} else if (cityorder.values().contains(1)) {
+			for (Entry<CityNode, Integer> e : cityorder.entrySet()) {
+				if (e.getValue() == 1) {
+					c = e.getKey();
+					break;
+				}
+			}
 		}
 		return c;
 	}
@@ -221,24 +228,25 @@ public class MainFrameWrapper {
 	
 	//Diese Methode wird für unseren Agenten aufegrufen, um den möglichen Plätzen einen Score zu geben, abhängig von der Solution
 	//Soll Problem beheben, dass Platz mit 3 mal Lumber einen Score von 3 kriegt, wenn Lösung nur 1 Lumber enthält.
+	//Plätze die an eine Desert grenzen, kriegen -1 Punkte, genauso wie Plätze, die an Wasser grenzen.
 	public HashMap<CityNode, Integer> getFittingCitiesNEW (List<String> solutionList) {
 		HashMap<CityNode, Integer> cityorder = new HashMap<CityNode, Integer>();
-		for (CityNode b : getBuildableCityNodesFirst()) {				
+		for (CityNode b : getBuildableCityNodesFirst()) {	
+			ArrayList<String> solutionListTemp = new ArrayList<>(solutionList);
 			int value = 0;
 			for (Tile t : frame.getBoard().getCloseLandtiles(b)) {
 
 				if (t instanceof LandTile) {
-					if (solutionList.contains(((LandTile) t).getType().toString().toLowerCase())) {
+					if (solutionListTemp.contains(((LandTile) t).getType().toString().toLowerCase())) {
 						value++;
+						solutionListTemp.remove(((LandTile) t).getType().toString().toLowerCase());
+					} else if (((LandTile) t).getType().toString().toLowerCase().equals("desert")) {
+						value--;
 					}
 				}  
-				//Entfernt, da Solution, nie unknown enthält, bzw selbst wenn, 
-				//sollte dies keinen Punkt geben, eine weitere Ressource ist immer besser
-				/*else {
-					if (solutionList.contains("unkown")) {
-						value++;
-					}
-				}*/
+				else {
+					value--;
+				}
 			}
 			cityorder.put(b, value);
 		}

@@ -691,7 +691,6 @@ public class CBRPlayerAgent extends Agent {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build STREETS");
 				tempActions.add(AgentActionSettler.PLACE_STREET);
 				tempActions.add(AgentActionSettler.PLACE_STREET);
-				tempActions.add(AgentActionSettler.PLACE_STREET);
 			}
 			if (frame.getActivePlayer().canBuildTown() && frame.getBuildableTowns().size() > 0) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build TOWNS");

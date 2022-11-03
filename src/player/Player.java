@@ -399,10 +399,14 @@ public class Player implements Serializable{
 				}
 			}
 			if(pointsTemp >= 10) {
+				ArrayList<Card> cardsToActivate = new ArrayList<>();
 				for (Card c: handcard) {
 					if (c.getEffect() == CardEffect.VICTORY_POINT) {
-						activateCard(c);
+						cardsToActivate.add(c);
 					}
+				}
+				for (Card c: cardsToActivate) {
+					activateCard(c);
 				}
 			}
 		}

@@ -224,12 +224,13 @@ public class Board extends JPanel{
 			c.setPiece(frame.getActivePlayer().placeTownPiece(true));
 			firstTurnCityPlaced = c;
 			frame.setBuildStartTown(true);
-			if (frame.getStage() == TurnStage.SECOND_TURN) {
+			//entfernt, damit man auch beim ersten Dorf die Ressourcen bekommt
+			//if (frame.getStage() == TurnStage.SECOND_TURN) {
 				for (LandType t : c.getAdjecentTypes()) {
 					c.getPiece().getPlayer().addRessourceByEnum(t, false);
 					notifieListeners(new BoardEvent( BoardEvents.RESSOURCES_DISTRIBUTED));
 				}
-			}
+			//}
 			frame.getActivePlayer().addHardbour(c.getHarbourType());
 			notifieListeners(new BoardEvent(BoardEvents.TOWN_PLACED));
 		}

@@ -151,7 +151,7 @@ public class MainFrame extends JFrame implements BoardListener {
 		int i = 0;
 		for(Player p : player) {
 			//Debug stuff
-			p.debugRessources(i);
+			//p.debugRessources(i);
 			PlayerPanel tempPanel = new PlayerPanel(p);
 			leftPanel.add(tempPanel);
 			playerpanels.add(tempPanel);

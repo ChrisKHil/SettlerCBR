@@ -328,6 +328,7 @@ public class MainFrame extends JFrame implements BoardListener {
 		for (int i = 0; i < 25; i++) {
 			if (i < 2) {
 				//cardDrawPile.add(new Card(CardEffect.FREE_STREET));
+				cardDrawPile.add(new Card(CardEffect.VICTORY_POINT));
 			} else if (i < 4) {
 				cardDrawPile.add(new Card(CardEffect.GET_ONE_FROM_ALL));
 			} else if (i < 6) {

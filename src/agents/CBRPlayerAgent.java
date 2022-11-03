@@ -1,5 +1,6 @@
 package agents;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import Util.MainFrameWrapper;
 import Util.ResourceProbabilityPair;
 import Util.Trade;
 import Util.TradingUtils;
+import enums.CardEffect;
 import enums.LandType;
 import enums.TurnStage;
 import frames.MainFrame;
@@ -30,6 +32,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+import pieces.Card;
 import pieces.CityNode;
 import pieces.StreetNode;
 import player.Player;
@@ -676,30 +679,59 @@ public class CBRPlayerAgent extends Agent {
 	private List<AgentActionSettler> possibleAgentActionsBuildPhase() {
 		List<AgentActionSettler> tempActions = new ArrayList<AgentActionSettler>();
 		tempActions.add(AgentActionSettler.ADVANCE_TURN);
-		if (frame.getActivePlayer().canBuildCity() && frame.getBuilalbeCitys().size() > 0) {
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build CITYS");
-			tempActions.add(AgentActionSettler.PLACE_CITY);
-			tempActions.add(AgentActionSettler.PLACE_CITY);
-			tempActions.add(AgentActionSettler.PLACE_CITY);
+		if (frame.getActivePlayer().getColor().getBlue() == 255) {
+			if (frame.getActivePlayer().canBuildCity() && frame.getBuilalbeCitys().size() > 0) {
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build CITYS");
+				tempActions.add(AgentActionSettler.PLACE_CITY);
+				tempActions.add(AgentActionSettler.PLACE_CITY);
+				tempActions.add(AgentActionSettler.PLACE_CITY);
+				tempActions.add(AgentActionSettler.PLACE_CITY);
+			}
+			if (frame.getActivePlayer().canBuildStreet() && frame.getBuildableStreetNodes().size() > 0) {
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build STREETS");
+				tempActions.add(AgentActionSettler.PLACE_STREET);
+				tempActions.add(AgentActionSettler.PLACE_STREET);
+				tempActions.add(AgentActionSettler.PLACE_STREET);
+			}
+			if (frame.getActivePlayer().canBuildTown() && frame.getBuildableTowns().size() > 0) {
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build TOWNS");
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+			}
+			if (frame.getActivePlayer().canBuyCard()) {
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can BUY CARDS");
+				tempActions.add(AgentActionSettler.BUY_CARD);
+				tempActions.add(AgentActionSettler.BUY_CARD);
+			}		
+		} else {
+			if (frame.getActivePlayer().canBuildCity() && frame.getBuilalbeCitys().size() > 0) {
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build CITYS");
+				tempActions.add(AgentActionSettler.PLACE_CITY);
+				tempActions.add(AgentActionSettler.PLACE_CITY);
+				tempActions.add(AgentActionSettler.PLACE_CITY);
+			}
+			if (frame.getActivePlayer().canBuildStreet() && frame.getBuildableStreetNodes().size() > 0) {
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build STREETS");
+				tempActions.add(AgentActionSettler.PLACE_STREET);
+				tempActions.add(AgentActionSettler.PLACE_STREET);
+			}
+			if (frame.getActivePlayer().canBuildTown() && frame.getBuildableTowns().size() > 0) {
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build TOWNS");
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+				tempActions.add(AgentActionSettler.PLACE_TOWN);
+			}
+			if (frame.getActivePlayer().canBuyCard()) {
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can BUY CARDS");
+				tempActions.add(AgentActionSettler.BUY_CARD);
+			}
 		}
-		if (frame.getActivePlayer().canBuildStreet() && frame.getBuildableStreetNodes().size() > 0) {
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build STREETS");
-			tempActions.add(AgentActionSettler.PLACE_STREET);
-			tempActions.add(AgentActionSettler.PLACE_STREET);
-		}
-		if (frame.getActivePlayer().canBuildTown() && frame.getBuildableTowns().size() > 0) {
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build TOWNS");
-			tempActions.add(AgentActionSettler.PLACE_TOWN);
-			tempActions.add(AgentActionSettler.PLACE_TOWN);
-			tempActions.add(AgentActionSettler.PLACE_TOWN);
-			tempActions.add(AgentActionSettler.PLACE_TOWN);
-			tempActions.add(AgentActionSettler.PLACE_TOWN);
-			tempActions.add(AgentActionSettler.PLACE_TOWN);
-		}
-		if (frame.getActivePlayer().canBuyCard()) {
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can BUY CARDS");
-			tempActions.add(AgentActionSettler.BUY_CARD);
-		}			
 		return tempActions;
 	}
 	
@@ -710,7 +742,14 @@ public class CBRPlayerAgent extends Agent {
 			System.out.println("Changing Thives Agent Decision");
 			//TODO:
 			List<LandTile> tiles = frame.getAllEnemyTiles();
-			message.setData(new Point(tiles.get(AgentUtils.randomChoice(tiles.size())).getX(),tiles.get(AgentUtils.randomChoice(tiles.size())).getY()));
+			//Unser Agent blockt nicht seine eigenen Felder
+			
+			if(name.equals("Blue")) {
+				LandTile toBlock = tiles.get(AgentUtils.randomChoice(tiles.size()));
+				message.setData(new Point(toBlock.getX(),toBlock.getY()));
+			} else {
+				message.setData(new Point(tiles.get(AgentUtils.randomChoice(tiles.size())).getX(),tiles.get(AgentUtils.randomChoice(tiles.size())).getY()));
+			}
 		} else if (message.getAction() == AgentActionSettler.DISCARD_RESSOURCES) {
 			discardLandcards(message);
 			didDiscard = true;
@@ -844,14 +883,21 @@ public class CBRPlayerAgent extends Agent {
 	//Neue Methode für Güte der Nodes bestimmen. Wahrscheinlichkeit hat mehr Gewichtung und Desert und Harbor wird nahezu ausgeschlossen.
 	private int calculateCityNodePreferenceNEW(CityNode c){
 		int pref = 0;
+		boolean gotClay = false;
+		boolean gotLumber = false;
 		for (Tile t : frame.getTilesByCity(c) ) {
 			if (t instanceof LandTile) {
 				pref += 3*(Math.abs(7 - ((LandTile)t).getNumber()));
 				if (((LandTile)t).getType() == LandType.STONE) {
 					pref += 1;
 				}
-				if (((LandTile)t).getType() == LandType.CLAY || ((LandTile)t).getType() == LandType.LUMBER) {
-					pref -= 1;
+				if (((LandTile)t).getType() == LandType.CLAY && !gotClay) {
+					pref -= 10;
+					gotClay = true;
+				}
+				if (((LandTile)t).getType() == LandType.LUMBER || !gotLumber) {
+					pref -= 7;
+					gotLumber = true;
 				}
 				if (((LandTile)t).getType() == LandType.DESERT) {
 					pref += 100;

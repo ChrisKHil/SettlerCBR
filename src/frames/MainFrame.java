@@ -327,7 +327,7 @@ public class MainFrame extends JFrame implements BoardListener {
 	private void createCardPile() {
 		for (int i = 0; i < 25; i++) {
 			if (i < 2) {
-				cardDrawPile.add(new Card(CardEffect.FREE_STREET));
+				//cardDrawPile.add(new Card(CardEffect.FREE_STREET));
 			} else if (i < 4) {
 				cardDrawPile.add(new Card(CardEffect.GET_ONE_FROM_ALL));
 			} else if (i < 6) {
@@ -497,6 +497,19 @@ public class MainFrame extends JFrame implements BoardListener {
 			break;
 		case TRADE:
 			bottomControl.changeTurnEndButton();
+			Card j = null;
+			if (getActivePlayer().getColor().getBlue() == 255 && getActivePlayer().getHand().size() > 0) {
+				for (Card c: getActivePlayer().getHand()) {
+					if (c.getEffect() != CardEffect.VICTORY_POINT) {
+						j = c;
+						break;
+					}
+				}
+			}
+			if (j != null) {
+				activatedCard(j);
+				break;
+			}
 			setStage(TurnStage.BUILD);
 			break;
 		case BUILD:
@@ -554,15 +567,32 @@ public class MainFrame extends JFrame implements BoardListener {
 			if (card.getEffect() == CardEffect.FREE_STREET) {
 				setStage(TurnStage.BUILD_STREET);
 			} else if (card.getEffect() == CardEffect.TAKE_TWO_RESSOURCES) {
+				Random rand = new Random();
+				LandType[] types = TradingUtils.getTypes();
+				List<LandType> typesToPick = new ArrayList<LandType>();
+				typesToPick.add(types[rand.nextInt(5)]);
+				typesToPick.add(types[rand.nextInt(5)]);
+				
+				
+				/*
 				TwoRessourceChoice tempTdialogue = new TwoRessourceChoice(this, true);
 				System.out.println("			>PRE DIALOGUE------------------------------------------");
 				tempTdialogue.setVisible(true);
 				System.out.println("			>AFTER DIALOGUE------------------------------------------");
 				takeRessourcesFromPile(tempTdialogue.getPicks());
+				*/
+				
+				takeRessourcesFromPile(typesToPick);
 			} else if (card.getEffect() == CardEffect.GET_ONE_FROM_ALL) {
+				Random rand = new Random();
+				LandType[] types = TradingUtils.getTypes();
+				takeRessoureceFromPlayer(types[rand.nextInt(5)]);
+				
+				/*
 				OneFromAllDialogue tempDialogue = new OneFromAllDialogue(this, true);
 				tempDialogue.setVisible(true);
 				takeRessoureceFromPlayer(tempDialogue.getPick());
+				*/
 			}
 		}
 		bottomControl.getControlInforPanel().nextPlayerHand();

@@ -387,13 +387,31 @@ public class Player implements Serializable{
 		for (CityPiece p : placedCityPieces) {
 			points += 2;
 		}
+		points += hasLongestStreet ? 2 : 0;
+		points += hasMostKnights ? 2 : 0;
+		
+		//Unser Agent aktiviert seine Victory Points, wenn er dadurch gewinnt
+		if (color.getBlue() == 255) {
+			int pointsTemp = points;
+			for (Card c: handcard) {
+				if (c.getEffect() == CardEffect.VICTORY_POINT) {
+					pointsTemp++;
+				}
+			}
+			if(pointsTemp >= 10) {
+				for (Card c: handcard) {
+					if (c.getEffect() == CardEffect.VICTORY_POINT) {
+						activateCard(c);
+					}
+				}
+			}
+		}
+			
 		for (Card c: activeCards) {
 			if (c.getEffect() == CardEffect.VICTORY_POINT) {
 				points++;
 			}
 		}
-		points += hasLongestStreet ? 2 : 0;
-		points += hasMostKnights ? 2 : 0;
 		return points;
 	}
 	

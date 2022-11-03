@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import enums.LandType;
 import enums.TurnStage;
 import frames.MainFrame;
 import pieces.CityNode;
@@ -176,24 +177,33 @@ public class MainFrameWrapper {
 	
 	public CityNode findFittingNodeNEW(String solution) {
 		CityNode c = null;
+		ArrayList<CityNode> nodesTemp = new ArrayList<>();
 		
+		//Ist eine Node mit allen 3 Ressourcen vorhanden, wird geguckt, ob diese akzeptable wahrscheinlichkeiten hat.
 		List<String> solutionList =Arrays.asList(solution.split(";"));
 		HashMap<CityNode, Integer> cityorder =getFittingCitiesNEW(solutionList);
 		if (cityorder.values().contains(3)) {
 			for (Entry<CityNode, Integer> e : cityorder.entrySet()) {
-				if (e.getValue() == 3) {
-					c = e.getKey();
-					break;
+				//Hier könnte man noch abändern, ab welchem Score man lieber den besten 2er haben will, statt einen schlechten 3er
+				if (e.getValue() == 3 && calculateCityNodeScore(e.getKey()) < 10) {
+					nodesTemp.add(e.getKey());
 				}
 			}
-		} else if (cityorder.values().contains(2)) {
+			nodesTemp.sort((CityNode n, CityNode b) -> calculateCityNodeScore(n) - calculateCityNodeScore(b));
+			if (nodesTemp.size() != 0) {
+				c = nodesTemp.get(0);
+			}
+		}  
+		//Ist das nicht der Fall, wird der Platz mit 2 gewollten Ressourcen und den Besten Wahrscheinlichkeiten genommen.
+		if (cityorder.values().contains(2) && c == null) {
 			for (Entry<CityNode, Integer> e : cityorder.entrySet()) {
 				if (e.getValue() == 2) {
-					c = e.getKey();
-					break;
+					nodesTemp.add(e.getKey());
 				}
 			}
-		} else if (cityorder.values().contains(1)) {
+			nodesTemp.sort((CityNode n, CityNode b) -> calculateCityNodeScore(n) - calculateCityNodeScore(b));
+			c = nodesTemp.get(0);
+		} else if (cityorder.values().contains(1) && c == null) {
 			for (Entry<CityNode, Integer> e : cityorder.entrySet()) {
 				if (e.getValue() == 1) {
 					c = e.getKey();
@@ -251,5 +261,17 @@ public class MainFrameWrapper {
 			cityorder.put(b, value);
 		}
 		return cityorder;
+	}
+	
+	
+	//Gibt Score der Node zurück
+	private int calculateCityNodeScore(CityNode c){
+		int pref = 0;
+		for (Tile t : getTilesByCity(c) ) {
+			if (t instanceof LandTile) {
+				pref += (Math.abs(7 - ((LandTile)t).getNumber()));	
+			} 
+		}
+		return pref;
 	}
 }

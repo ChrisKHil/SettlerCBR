@@ -331,7 +331,13 @@ public class CBRPlayerAgent extends Agent {
 			if (frame.getTurnStage() == TurnStage.SECOND_TURN) {
 				ResourceProbabilityPair pair = frame.getResourceProbabilityCombi(frame.getPlayerByColor(name));
 				System.out.println("Name: " + name.substring(0,1));
-				String solution = FirstMoveCB.agentQuery(pair.getResources(), pair.getProbabilities(), name.substring(0,1));
+				String solution = "";
+				//Neue Methode, die unseren Agenten die Probabilities besser macht.
+				if(name.equals("Blue")) {
+					solution = FirstMoveCB.agentQueryNEW(pair.getResources(), pair.getProbabilities(), name.substring(0,1));
+				} else {
+					solution = FirstMoveCB.agentQuery(pair.getResources(), pair.getProbabilities(), name.substring(0,1));
+				}
 				System.out.println("Solution: " + solution);
 				if(name.equals("Blue")) {
 					c = frame.findFittingNodeNEW(solution);

@@ -124,7 +124,7 @@ public class FirstMoveCases {
 			}
 		}
 		
-		System.out.println(id + " Fälle erstellt");
+		System.out.println(id + " Fï¿½lle erstellt");
 		
 		br.close();
 	}
@@ -173,6 +173,31 @@ public class FirstMoveCases {
 	
 	//find one or more cases which are similar (Retrieval)
 	public static List<Pair<Instance,Similarity>> findSimilarCases(Map<String, String> input) {
+		
+		// create Retrieval
+		Retrieval retrieval = new Retrieval(myConcept, caseBase);
+		
+		// get all values of the query
+		Instance query = retrieval.getQueryInstance();
+		
+		for(String name : input.keySet()) {
+			AttributeDesc attr = myConcept.getAttributeDesc(name);
+			try {
+				query.addAttribute(attr, attr.getAttribute(input.get(name)));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// find a similar case
+		retrieval.start();
+		List<Pair<Instance,Similarity>> result = retrieval.getResult();
+		Collections.sort(result, (i1,i2) -> -Double.compare(i1.getSecond().getValue(), i2.getSecond().getValue()));
+ 
+		return result;
+	}
+	
+public static List<Pair<Instance,Similarity>> findSimilarCasesNEW(Map<String, String> input) {
 		
 		// create Retrieval
 		Retrieval retrieval = new Retrieval(myConcept, caseBase);

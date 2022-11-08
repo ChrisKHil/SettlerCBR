@@ -593,8 +593,15 @@ public class CBRPlayerAgent extends Agent {
 				nextActions.add(AgentActionSettler.PLACE_TOWN);
 			}
 			if (AgentUtils.sumOfRessources(frame.getActivePlayer().getNeededRessources(TradingUtils.getCityPriceArray())) <= 2) {
-				System.out.println("--Agent is determined to built a city.");
-				nextActions.add(AgentActionSettler.PLACE_CITY);
+				if (frame.getActivePlayer().getColor().getBlue() == 255) {
+					if(frame.getBuilalbeCitys().size() > 0) {
+						System.out.println("--Agent is determined to built a city.");
+						nextActions.add(AgentActionSettler.PLACE_CITY);
+					}
+				} else {
+					System.out.println("--Agent is determined to built a city.");
+					nextActions.add(AgentActionSettler.PLACE_CITY);
+				}
 			} else {
 				System.out.println("--Agent is determined to built a street.");
 				nextActions.add(AgentActionSettler.PLACE_STREET);

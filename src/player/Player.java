@@ -144,6 +144,20 @@ public class Player implements Serializable{
 		System.out.println("");
 		return neededRessources; 
 	}
+	
+	public int[] getNeededRessourcesNEW(int[] priceArray) {
+		int[] neededRessources = new int[5];
+		int[] currentRessources = toRessourceArray();
+		for (int i = 0; i < 5; i++) {
+			neededRessources[i] = priceArray[i] - currentRessources[i];
+		}
+		//Round Ressources entfernen, da man anhand der Negative Zahlen sehen kann, wie viel man abwerfen kann, um trotzdem das geplante bauen zu können
+		TradingUtils.roundRessourceArray(neededRessources);
+		System.out.print("Resources Needed:");
+		TradingUtils.pritPrintResourceArray(neededRessources);
+		System.out.println("");
+		return neededRessources; 
+	}
 	/**
 	 * Done to determine the possible amount of tradable resource cards given a certain priceArray for next actions.
 	 * @param priceArray

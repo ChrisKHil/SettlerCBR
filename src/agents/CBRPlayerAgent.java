@@ -779,8 +779,15 @@ public class CBRPlayerAgent extends Agent {
 		int numberToDiscard = TradingUtils.createShuffleList(p).size() / 2;
 		//DO some delibarateion about what to pic
 		determineNextAction(frame.getPlayerByColor(name));
-		String solution = DiscardCardsThiefCB.agentQuery(frame.getPlayerByColor(name).toRessourceArray()
-				, frame.getPlayerByColor(name).getNeededRessources(AgentUtils.actionToPriceArray(nextActions.get(0))), name.substring(0,1));
+		String solution = "";
+		if(name.equals("Blue")) {
+			solution = DiscardCardsThiefCB.agentQuery(frame.getPlayerByColor(name).toRessourceArray()
+					, frame.getPlayerByColor(name).getNeededRessourcesNEW(AgentUtils.actionToPriceArray(nextActions.get(0))), name.substring(0,1));
+		} else {
+			solution = DiscardCardsThiefCB.agentQuery(frame.getPlayerByColor(name).toRessourceArray()
+					, frame.getPlayerByColor(name).getNeededRessources(AgentUtils.actionToPriceArray(nextActions.get(0))), name.substring(0,1));
+		}
+		
 		
 		List<LandType> toDiscard = new ArrayList<LandType>();
 		if (!solution.equals("No case with a similarity of at least 0.7 could be found!")) {

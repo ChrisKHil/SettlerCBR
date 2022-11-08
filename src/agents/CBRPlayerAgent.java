@@ -597,6 +597,9 @@ public class CBRPlayerAgent extends Agent {
 					if(frame.getBuilalbeCitys().size() > 0) {
 						System.out.println("--Agent is determined to built a city.");
 						nextActions.add(AgentActionSettler.PLACE_CITY);
+					} else {
+						System.out.println("--Agent is determined to built a street.");
+						nextActions.add(AgentActionSettler.PLACE_STREET);
 					}
 				} else {
 					System.out.println("--Agent is determined to built a city.");

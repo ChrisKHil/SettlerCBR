@@ -152,7 +152,7 @@ public class Player implements Serializable{
 			neededRessources[i] = priceArray[i] - currentRessources[i];
 		}
 		//Round Ressources entfernen, da man anhand der Negative Zahlen sehen kann, wie viel man abwerfen kann, um trotzdem das geplante bauen zu können
-		TradingUtils.roundRessourceArray(neededRessources);
+		//TradingUtils.roundRessourceArray(neededRessources);
 		System.out.print("Resources Needed:");
 		TradingUtils.pritPrintResourceArray(neededRessources);
 		System.out.println("");

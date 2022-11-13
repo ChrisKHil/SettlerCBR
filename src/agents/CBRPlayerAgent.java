@@ -586,6 +586,7 @@ public class CBRPlayerAgent extends Agent {
 	private void determineNextAction(Player player) {
 		System.out.println("Player Null: " + (player == null) + "color values: " + player.getColor());
 		playerSetPlan();
+		//Vor playerSetPlan das nextActions Array leeren, weitere Actions auch hinzufügen, wenn nextActions nicht leer ist.
 		System.out.println("-Agent " + ColorUtils.colorToString(player.getColor()) +  " is determining next action.");
 		if (nextActions.size() == 0) {
 			if (frame.getBuildableTowns().size() > 0) {
@@ -613,6 +614,7 @@ public class CBRPlayerAgent extends Agent {
 	}
 	
 	private void playerSetPlan() {
+		//Solution Action soll dem nextAction array hinzugefügt werden.
 		int[] pieces = {frame.getPlayerByColor(name).getPlacedTownPieces().size(), frame.getPlayerByColor(name).getPlacedCityPieces().size()};
 		String solution = NextMoveCB.agentQuery(name.substring(0,1), pieces, frame.getPlayerByColor(name).toRessourceArray());
 		System.out.println(solution);
@@ -684,6 +686,8 @@ public class CBRPlayerAgent extends Agent {
 		//Thus there will be a default action if something else breaks
 		//TODO: Doing CBR call evalutating what to do. Currently randomly choosen option.
 		List<AgentActionSettler> choices = possibleAgentActionsBuildPhase();
+		//Prüfen, ob nextActions[0] in choices enthalten ist, wenn ja, durchführen, wenn nein, zweiten Platz nehmen, etc. 
+		//Ist keine der nextActions möglich, und man hat mehr als 7 Karten, versuchen Karte zu kaufen, sonst weiter.
 		message.setAction(choices.get(AgentUtils.randomChoice(choices.size())));
 		
 	}
@@ -696,6 +700,7 @@ public class CBRPlayerAgent extends Agent {
 		List<AgentActionSettler> tempActions = new ArrayList<AgentActionSettler>();
 		tempActions.add(AgentActionSettler.ADVANCE_TURN);
 		if (frame.getActivePlayer().getColor().getBlue() == 255) {
+			//Mehrfach nennungen können dann entfernt werden, da keine Random Choice mehr erfolgen soll.
 			if (frame.getActivePlayer().canBuildCity() && frame.getBuilalbeCitys().size() > 0) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build CITYS");
 				tempActions.add(AgentActionSettler.PLACE_CITY);

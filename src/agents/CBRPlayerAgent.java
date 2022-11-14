@@ -604,9 +604,6 @@ public class CBRPlayerAgent extends Agent {
 				System.out.println("--Agent is determined to built a street.");
 				nextActions.add(AgentActionSettler.PLACE_STREET);
 			}
-			for (AgentActionSettler i : nextActions) {
-				System.out.println("-------------------------§$%&" + i);
-			}
 		} else {
 			System.out.println("Player Null: " + (player == null) + "color values: " + player.getColor());
 			playerSetPlan();
@@ -733,7 +730,6 @@ public class CBRPlayerAgent extends Agent {
 			} else  if (!found) {
 				message.setAction(AgentActionSettler.ADVANCE_TURN);
 			}
-			System.out.println("--------JUHU-----------------§$%&" + message.getAction());
 		} else {
 			//Usually, set it to advance and then check for better option, replace if found
 			//Thus there will be a default action if something else breaks

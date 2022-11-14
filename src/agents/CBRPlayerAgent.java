@@ -698,12 +698,12 @@ public class CBRPlayerAgent extends Agent {
 		switch (message.getAction()) {
 		case PLACE_CITY:
 			List<CityNode> possibleCities = frame.getBuilalbeCitys();
-			possibleCities.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW(n) - calculateCityNodePreferenceNEW(b) );
+			possibleCities.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW2(n) - calculateCityNodePreferenceNEW2(b) );
 			message.setData(possibleCities.get(0));
 			break;
 		case PLACE_TOWN:
 			List<CityNode> possibleTowns = frame.getBuildableTowns();
-			possibleTowns.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW(n) - calculateCityNodePreferenceNEW(b) );
+			possibleTowns.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW2(n) - calculateCityNodePreferenceNEW2(b) );
 			message.setData(possibleTowns.get(0));
 			break;
 		case PLACE_STREET:
@@ -993,6 +993,38 @@ public class CBRPlayerAgent extends Agent {
 				pref -= 2;
 				break;
 		}*/
+		return pref;
+	}
+	
+	private int calculateCityNodePreferenceNEW2(CityNode c){
+		int pref = 0;
+		boolean water = false;
+		for (Tile t : frame.getTilesByCity(c) ) {
+			if (t instanceof LandTile) {
+				pref += 3*(Math.abs(7 - ((LandTile)t).getNumber()));
+				if (((LandTile)t).getType() == LandType.DESERT) {
+					pref += 100;
+				}
+			} else {
+				water = true;
+			}
+		}
+		
+		if (water) {
+			switch (c.getHarbourType()) {
+			case THREE_TO_ONE:
+				//Offsetting the +7 for the harbourtile and an additional as better trades are nice.
+				pref += 10;
+				break;
+			case NONE:
+				pref += 200;
+				break;
+			default:
+				//Single resource trade is kind of better?
+				pref += 7;
+				break;
+			}
+		}
 		return pref;
 	}
 	

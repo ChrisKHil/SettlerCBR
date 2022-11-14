@@ -95,6 +95,9 @@ public class AgentUtils {
 		case PLACE_TOWN:
 			temp = TradingUtils.getTownPriceArray();
 		break;
+		case BUY_CARD:
+			temp = TradingUtils.getCardPriceArray();
+		break;
 		default:
 			System.out.println("There is no adequate pricearray for action: " + action);
 		break;
@@ -275,7 +278,7 @@ public class AgentUtils {
 				System.out.println("Dist of 1");
 				distance = 1;
 			} else if (c.getAdjecentStreet().contains(s) && n.getAdjecentStreet().contains(s) && (s.getPiece() == null || !s.getPiece().getPlayer().equals(player))) {
-				System.out.println("ElsBLÖCKEs");
+				System.out.println("ElsBLï¿½CKEs");
 				distance = -10;
 			}
 		}

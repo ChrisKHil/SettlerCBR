@@ -638,6 +638,9 @@ public class CBRPlayerAgent extends Agent {
 			case "city":
 				action =  AgentActionSettler.PLACE_CITY;
 				break;
+			case "card":
+				action =  AgentActionSettler.BUY_CARD;
+				break;
 			default:
 				action =  AgentActionSettler.PLACE_STREET;
 				break;
@@ -695,11 +698,13 @@ public class CBRPlayerAgent extends Agent {
 		switch (message.getAction()) {
 		case PLACE_CITY:
 			List<CityNode> possibleCities = frame.getBuilalbeCitys();
-			message.setData(possibleCities.get(AgentUtils.randomChoice(possibleCities.size())));
+			possibleCities.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW(n) - calculateCityNodePreferenceNEW(b) );
+			message.setData(possibleCities.get(0));
 			break;
 		case PLACE_TOWN:
 			List<CityNode> possibleTowns = frame.getBuildableTowns();
-			message.setData(possibleTowns.get(AgentUtils.randomChoice(possibleTowns.size())));
+			possibleTowns.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW(n) - calculateCityNodePreferenceNEW(b) );
+			message.setData(possibleTowns.get(0));
 			break;
 		case PLACE_STREET:
 			List<StreetNode> possibleStreets = frame.getBuildableStreetNodes();

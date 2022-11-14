@@ -43,7 +43,7 @@ public class CBRPlayerAgent extends Agent {
 	
 	private String name;
 	
-	private List<AgentActionSettler> nextActions;
+	private ArrayList<AgentActionSettler> nextActions;
 	
 	private ACLMessage gateWayMessage;
 	
@@ -584,41 +584,74 @@ public class CBRPlayerAgent extends Agent {
 	 * Here we filter what the Player can do if we ignore the resources and thus what to trade for.
 	 */
 	private void determineNextAction(Player player) {
-		System.out.println("Player Null: " + (player == null) + "color values: " + player.getColor());
-		playerSetPlan();
-		//Vor playerSetPlan das nextActions Array leeren, weitere Actions auch hinzufügen, wenn nextActions nicht leer ist.
-		System.out.println("-Agent " + ColorUtils.colorToString(player.getColor()) +  " is determining next action.");
-		if (nextActions.size() == 0) {
+		
+		if (frame.getActivePlayer().getColor().getBlue() == 255) {
+			System.out.println("Player Null: " + (player == null) + "color values: " + player.getColor());
+			nextActions.clear();
+			nextActions.add(playerSetPlan());
+			System.out.println("-Agent " + ColorUtils.colorToString(player.getColor()) +  " is determining next action.");
 			if (frame.getBuildableTowns().size() > 0) {
 				System.out.println("--Agent is determined to built a town.");
 				nextActions.add(AgentActionSettler.PLACE_TOWN);
 			}
-			if (AgentUtils.sumOfRessources(frame.getActivePlayer().getNeededRessources(TradingUtils.getCityPriceArray())) <= 2) {
-				if (frame.getActivePlayer().getColor().getBlue() == 255) {
-					if(frame.getBuilalbeCitys().size() > 0) {
-						System.out.println("--Agent is determined to built a city.");
-						nextActions.add(AgentActionSettler.PLACE_CITY);
-					} else {
-						System.out.println("--Agent is determined to built a street.");
-						nextActions.add(AgentActionSettler.PLACE_STREET);
-					}
-				} else {
-					System.out.println("--Agent is determined to built a city.");
-					nextActions.add(AgentActionSettler.PLACE_CITY);
+			if (AgentUtils.sumOfRessources(frame.getActivePlayer().getNeededRessources(TradingUtils.getCityPriceArray())) < 2 && frame.getBuilalbeCitys().size() > 0) {
+				System.out.println("--Agent is determined to built a city.");
+				nextActions.add(AgentActionSettler.PLACE_CITY);
+				if(AgentUtils.sumOfRessources(frame.getActivePlayer().toRessourceArray()) > 6) {
+					nextActions.add(AgentActionSettler.PLACE_STREET);
 				}
 			} else {
 				System.out.println("--Agent is determined to built a street.");
 				nextActions.add(AgentActionSettler.PLACE_STREET);
 			}
+			for (AgentActionSettler i : nextActions) {
+				System.out.println("-------------------------§$%&" + i);
+			}
+		} else {
+			System.out.println("Player Null: " + (player == null) + "color values: " + player.getColor());
+			playerSetPlan();
+			//Vor playerSetPlan das nextActions Array leeren, weitere Actions auch hinzufügen, wenn nextActions nicht leer ist.
+			System.out.println("-Agent " + ColorUtils.colorToString(player.getColor()) +  " is determining next action.");
+			if (nextActions.size() == 0) {
+				if (frame.getBuildableTowns().size() > 0) {
+					System.out.println("--Agent is determined to built a town.");
+					nextActions.add(AgentActionSettler.PLACE_TOWN);
+				}
+				if (AgentUtils.sumOfRessources(frame.getActivePlayer().getNeededRessources(TradingUtils.getCityPriceArray())) <= 2) {
+					System.out.println("--Agent is determined to built a city.");
+					nextActions.add(AgentActionSettler.PLACE_CITY);
+				} else {
+					System.out.println("--Agent is determined to built a street.");
+					nextActions.add(AgentActionSettler.PLACE_STREET);
+				}
+			}
 		}
 	}
 	
-	private void playerSetPlan() {
-		//Solution Action soll dem nextAction array hinzugefügt werden.
-		int[] pieces = {frame.getPlayerByColor(name).getPlacedTownPieces().size(), frame.getPlayerByColor(name).getPlacedCityPieces().size()};
-		String solution = NextMoveCB.agentQuery(name.substring(0,1), pieces, frame.getPlayerByColor(name).toRessourceArray());
-		System.out.println(solution);
-		
+	private AgentActionSettler playerSetPlan() {
+		AgentActionSettler action = null;
+		if (frame.getActivePlayer().getColor().getBlue() == 255) {
+			int[] pieces = {frame.getPlayerByColor(name).getPlacedTownPieces().size(), frame.getPlayerByColor(name).getPlacedCityPieces().size()};
+			String solution = NextMoveCB.agentQuery(name.substring(0,1), pieces, frame.getPlayerByColor(name).toRessourceArray());
+			String[] solutionArray = solution.split(";");
+			switch(solutionArray[0]) {
+			case "town":
+				action = AgentActionSettler.PLACE_TOWN;
+				break;
+			case "city":
+				action =  AgentActionSettler.PLACE_CITY;
+				break;
+			default:
+				action =  AgentActionSettler.PLACE_STREET;
+				break;
+			}
+		} else {
+			//Solution Action soll dem nextAction array hinzugefügt werden.
+			int[] pieces = {frame.getPlayerByColor(name).getPlacedTownPieces().size(), frame.getPlayerByColor(name).getPlacedCityPieces().size()};
+			String solution = NextMoveCB.agentQuery(name.substring(0,1), pieces, frame.getPlayerByColor(name).toRessourceArray());
+			System.out.println(solution);
+		}
+		return action;
 	}
 	
 	
@@ -682,14 +715,34 @@ public class CBRPlayerAgent extends Agent {
 	}
 	
 	private void delibareteBuildPhaseAction(AgentMessage message) {
-		//Usually, set it to advance and then check for better option, replace if found
-		//Thus there will be a default action if something else breaks
-		//TODO: Doing CBR call evalutating what to do. Currently randomly choosen option.
-		List<AgentActionSettler> choices = possibleAgentActionsBuildPhase();
-		//Prüfen, ob nextActions[0] in choices enthalten ist, wenn ja, durchführen, wenn nein, zweiten Platz nehmen, etc. 
-		//Ist keine der nextActions möglich, und man hat mehr als 7 Karten, versuchen Karte zu kaufen, sonst weiter.
-		message.setAction(choices.get(AgentUtils.randomChoice(choices.size())));
 		
+		if (frame.getActivePlayer().getColor().getBlue() == 255) {
+			List<AgentActionSettler> choices = possibleAgentActionsBuildPhase();
+			boolean found = false;
+			for (AgentActionSettler i: nextActions) {
+				if(choices.contains(i)) {
+					message.setAction(i);
+					found = true;
+					break;
+				}
+			}
+			//Ist keine der nextActions möglich, und man hat mehr als 7 Karten, versuchen Karte zu kaufen, sonst weiter.
+			int sum = frame.getActivePlayer().getClay() + frame.getActivePlayer().getCorn() + frame.getActivePlayer().getLumber() + frame.getActivePlayer().getStone() + frame.getActivePlayer().getWhool();
+			if (!found && choices.contains(AgentActionSettler.BUY_CARD) && sum > 5) {
+				message.setAction(AgentActionSettler.BUY_CARD);
+			} else  if (!found) {
+				message.setAction(AgentActionSettler.ADVANCE_TURN);
+			}
+			System.out.println("--------JUHU-----------------§$%&" + message.getAction());
+		} else {
+			//Usually, set it to advance and then check for better option, replace if found
+			//Thus there will be a default action if something else breaks
+			//TODO: Doing CBR call evalutating what to do. Currently randomly choosen option.
+			List<AgentActionSettler> choices = possibleAgentActionsBuildPhase();
+			//Prüfen, ob nextActions[0] in choices enthalten ist, wenn ja, durchführen, wenn nein, zweiten Platz nehmen, etc. 
+			//Ist keine der nextActions möglich, und man hat mehr als 7 Karten, versuchen Karte zu kaufen, sonst weiter.
+			message.setAction(choices.get(AgentUtils.randomChoice(choices.size())));
+		}
 	}
 	/**
 	 * Method to Veryfie Agent behavior, will return possible actions at build phase.
@@ -704,26 +757,17 @@ public class CBRPlayerAgent extends Agent {
 			if (frame.getActivePlayer().canBuildCity() && frame.getBuilalbeCitys().size() > 0) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build CITYS");
 				tempActions.add(AgentActionSettler.PLACE_CITY);
-				tempActions.add(AgentActionSettler.PLACE_CITY);
-				tempActions.add(AgentActionSettler.PLACE_CITY);
-				tempActions.add(AgentActionSettler.PLACE_CITY);
 			}
 			if (frame.getActivePlayer().canBuildStreet() && frame.getBuildableStreetNodes().size() > 0) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build STREETS");
-				tempActions.add(AgentActionSettler.PLACE_STREET);
 				tempActions.add(AgentActionSettler.PLACE_STREET);
 			}
 			if (frame.getActivePlayer().canBuildTown() && frame.getBuildableTowns().size() > 0) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build TOWNS");
 				tempActions.add(AgentActionSettler.PLACE_TOWN);
-				tempActions.add(AgentActionSettler.PLACE_TOWN);
-				tempActions.add(AgentActionSettler.PLACE_TOWN);
-				tempActions.add(AgentActionSettler.PLACE_TOWN);
-				tempActions.add(AgentActionSettler.PLACE_TOWN);
 			}
 			if (frame.getActivePlayer().canBuyCard()) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can BUY CARDS");
-				tempActions.add(AgentActionSettler.BUY_CARD);
 				tempActions.add(AgentActionSettler.BUY_CARD);
 			}		
 		} else {

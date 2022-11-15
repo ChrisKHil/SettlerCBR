@@ -698,13 +698,21 @@ public class CBRPlayerAgent extends Agent {
 		switch (message.getAction()) {
 		case PLACE_CITY:
 			List<CityNode> possibleCities = frame.getBuilalbeCitys();
-			possibleCities.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW2(n) - calculateCityNodePreferenceNEW2(b) );
-			message.setData(possibleCities.get(0));
+			if (frame.getActivePlayer().getColor().getBlue() == 255) {
+				possibleCities.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW2(n) - calculateCityNodePreferenceNEW2(b) );
+				message.setData(possibleCities.get(0));
+			} else {
+				message.setData(possibleCities.get(AgentUtils.randomChoice(possibleCities.size())));
+			}
 			break;
 		case PLACE_TOWN:
 			List<CityNode> possibleTowns = frame.getBuildableTowns();
-			possibleTowns.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW2(n) - calculateCityNodePreferenceNEW2(b) );
-			message.setData(possibleTowns.get(0));
+			if (frame.getActivePlayer().getColor().getBlue() == 255) {
+				possibleTowns.sort((CityNode n, CityNode b) -> calculateCityNodePreferenceNEW2(n) - calculateCityNodePreferenceNEW2(b) );
+				message.setData(possibleTowns.get(0));
+			} else {
+				message.setData(possibleTowns.get(AgentUtils.randomChoice(possibleTowns.size())));
+			}
 			break;
 		case PLACE_STREET:
 			List<StreetNode> possibleStreets = frame.getBuildableStreetNodes();

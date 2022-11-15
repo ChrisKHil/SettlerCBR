@@ -755,15 +755,15 @@ public class CBRPlayerAgent extends Agent {
 		tempActions.add(AgentActionSettler.ADVANCE_TURN);
 		if (frame.getActivePlayer().getColor().getBlue() == 255) {
 			//Mehrfach nennungen können dann entfernt werden, da keine Random Choice mehr erfolgen soll.
-			if (frame.getActivePlayer().canBuildCity() && frame.getBuilalbeCitys().size() > 0) {
+			if (frame.getActivePlayer().canBuildCityNEW() && frame.getBuilalbeCitys().size() > 0) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build CITYS");
 				tempActions.add(AgentActionSettler.PLACE_CITY);
 			}
-			if (frame.getActivePlayer().canBuildStreet() && frame.getBuildableStreetNodes().size() > 0) {
+			if (frame.getActivePlayer().canBuildStreetNEW() && frame.getBuildableStreetNodes().size() > 0) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build STREETS");
 				tempActions.add(AgentActionSettler.PLACE_STREET);
 			}
-			if (frame.getActivePlayer().canBuildTown() && frame.getBuildableTowns().size() > 0) {
+			if (frame.getActivePlayer().canBuildTownNEW() && frame.getBuildableTowns().size() > 0) {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The Agent can build TOWNS");
 				tempActions.add(AgentActionSettler.PLACE_TOWN);
 			}

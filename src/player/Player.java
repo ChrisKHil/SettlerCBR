@@ -132,6 +132,20 @@ public class Player implements Serializable{
 		return (stone > 0 && corn > 0 && whool > 0);
 	}
 	
+	public boolean canBuildTownNEW() {
+		return (lumber > 0 && clay > 0 && corn > 0 && whool > 0 && !ownedTownPieces.isEmpty());
+	}
+	
+	public boolean canBuildStreetNEW() {
+		return (lumber > 0 && clay > 0 && !ownedStreetPieces.isEmpty());
+	}
+	
+	public boolean canBuildCityNEW() {
+		return (stone > 2 && corn > 1 && !ownedCityPieces.isEmpty());
+	}
+	
+	
+	
 	public int[] getNeededRessources(int[] priceArray) {
 		int[] neededRessources = new int[5];
 		int[] currentRessources = toRessourceArray();

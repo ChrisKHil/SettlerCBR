@@ -567,22 +567,22 @@ public class CBRPlayerAgent extends Agent {
 	private boolean shouldDoTheTradeCBR(int[] requestArray, int[] offerArray, boolean isSender) {
 		boolean shouldTrade = false;
 		
-		System.out.println("---------------------------------------------§$%&");
-		System.out.println(Arrays.toString(frame.getPlayerByColor(name).toRessourceArray()) + " HAVE");
-		System.out.println(Arrays.toString(frame.getPlayerByColor(name).getNeededRessources(AgentUtils.actionToPriceArray(nextActions.get(0)))) + " NEED");
-		System.out.println(Arrays.toString(offerArray) + " OFFER");
-		System.out.println(Arrays.toString(requestArray) + " REQUEST");
-		System.out.println(name);
-		System.out.println(isSender);
-		System.out.println("---------------------------------------------§$%&");
-		
-		
 		System.out.println("CHECK CBR FOR TRADING");
 		System.out.println("NAME_: " + name.substring(0,1) +  " Name: " + name);
 		try {
- 			shouldTrade = TradeCB.agentQuery(offerArray
-					, frame.getPlayerByColor(name).getNeededRessources(AgentUtils.actionToPriceArray(nextActions.get(0)))
-					, name.substring(0,1));
+			if (frame.getActivePlayer().getColor().getBlue() == 255) {
+				if (isSender) {
+					shouldTrade = TradeCB.agentQueryNEW(offerArray, requestArray
+							, frame.getPlayerByColor(name).getNeededRessourcesNEW(AgentUtils.actionToPriceArray(nextActions.get(0)))
+							, name.substring(0,1));
+				} else {
+					shouldTrade = shouldDoTheTradeNEW(requestArray, offerArray, isSender);
+				}		
+			} else {
+				shouldTrade = TradeCB.agentQuery(offerArray
+						, frame.getPlayerByColor(name).getNeededRessources(AgentUtils.actionToPriceArray(nextActions.get(0)))
+						, name.substring(0,1));	
+			}	
 		} catch (Exception e) {
 			System.out.println("Error Trading Cases using non CBR Ruling.");
 			if (frame.getActivePlayer().getColor().getBlue() == 255) {

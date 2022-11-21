@@ -673,6 +673,7 @@ public class CBRPlayerAgent extends Agent {
 		if (frame.getActivePlayer().getColor().getBlue() == 255) {
 			int[] pieces = {frame.getPlayerByColor(name).getPlacedTownPieces().size(), frame.getPlayerByColor(name).getPlacedCityPieces().size()};
 			String solution = NextMoveCB.agentQuery(name.substring(0,1), pieces, frame.getPlayerByColor(name).toRessourceArray());
+			//Lösung aus der Fallbasis wird auch tatsächlich weiter verwendet
 			String[] solutionArray = solution.split(";");
 			switch(solutionArray[0]) {
 			case "town":
@@ -689,7 +690,6 @@ public class CBRPlayerAgent extends Agent {
 				break;
 			}
 		} else {
-			//Solution Action soll dem nextAction array hinzugefügt werden.
 			int[] pieces = {frame.getPlayerByColor(name).getPlacedTownPieces().size(), frame.getPlayerByColor(name).getPlacedCityPieces().size()};
 			String solution = NextMoveCB.agentQuery(name.substring(0,1), pieces, frame.getPlayerByColor(name).toRessourceArray());
 			System.out.println(solution);
@@ -772,6 +772,7 @@ public class CBRPlayerAgent extends Agent {
 		if (frame.getActivePlayer().getColor().getBlue() == 255) {
 			List<AgentActionSettler> choices = possibleAgentActionsBuildPhase();
 			boolean found = false;
+			//Prüfen, ob eine der nextActions möglich ist
 			for (AgentActionSettler i: nextActions) {
 				if(choices.contains(i)) {
 					message.setAction(i);
@@ -791,8 +792,6 @@ public class CBRPlayerAgent extends Agent {
 			//Thus there will be a default action if something else breaks
 			//TODO: Doing CBR call evalutating what to do. Currently randomly choosen option.
 			List<AgentActionSettler> choices = possibleAgentActionsBuildPhase();
-			//Prüfen, ob nextActions[0] in choices enthalten ist, wenn ja, durchführen, wenn nein, zweiten Platz nehmen, etc. 
-			//Ist keine der nextActions möglich, und man hat mehr als 7 Karten, versuchen Karte zu kaufen, sonst weiter.
 			message.setAction(choices.get(AgentUtils.randomChoice(choices.size())));
 		}
 	}
@@ -904,12 +903,14 @@ public class CBRPlayerAgent extends Agent {
 					System.out.println("Missed something: " + solutionArray[i]);
 				}
 			}
+			
 			int redistribute = 0;
 			for (int i = 0 ; i < 5 ; i++){
 				discardDifference[i] = ressourcesOwned[i] - toDiscardArray[i];
 				if(discardDifference[i] < 0) {
 					redistribute += (discardDifference[i] *-1);
-					//Ressourcen, die der Spieler zu wenig hat um sie abzuwerfen, werden auch aus dem toDiscardArray entfernt. 
+					//Ressourcen, die der Spieler zu wenig hat um sie abzuwerfen, werden auch aus dem toDiscardArray entfernt,
+					//da diese sonst trotzdem abgeworfen werden würden und zu negativen Ressourcen führt.
 					toDiscardArray[i] += discardDifference[i];
 
 				}
@@ -1003,7 +1004,9 @@ public class CBRPlayerAgent extends Agent {
 		return pref;
 	}
 	
-	//Neue Methode für Güte der Nodes bestimmen. Wahrscheinlichkeit hat mehr Gewichtung und Desert und Harbor wird nahezu ausgeschlossen.
+	//Neue Methode für Güte der Nodes bestimmen für die erste Stadt. 
+	//Wahrscheinlichkeit hat mehr Gewichtung und Desert und Harbor wird nahezu ausgeschlossen.
+	
 	private int calculateCityNodePreferenceNEW(CityNode c){
 		int pref = 0;
 		boolean gotClay = false;
@@ -1026,24 +1029,9 @@ public class CBRPlayerAgent extends Agent {
 					pref += 100;
 				}
 			} else {
-				//it is very bad to place a city wiht only one ore two resource fields and not having a harbour.
 				pref += 100;
 			}
 		}
-		
-		/*switch (c.getHarbourType()) {
-			case THREE_TO_ONE:
-				//Offsetting the +7 for the harbourtile and an additional as better trades are nice.
-				pref -= 1;
-				break;
-			case NONE:
-				pref += 1;
-				break;
-			default:
-				//Single resource trade is kind of better?
-				pref -= 2;
-				break;
-		}*/
 		return pref;
 	}
 	
@@ -1064,14 +1052,13 @@ public class CBRPlayerAgent extends Agent {
 		if (water) {
 			switch (c.getHarbourType()) {
 			case THREE_TO_ONE:
-				//Offsetting the +7 for the harbourtile and an additional as better trades are nice.
 				pref += 10;
 				break;
 			case NONE:
+				//Wasser ohne Hafen ist ganz schlecht
 				pref += 200;
 				break;
 			default:
-				//Single resource trade is kind of better?
 				pref += 7;
 				break;
 			}

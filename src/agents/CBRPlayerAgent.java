@@ -552,14 +552,11 @@ public class CBRPlayerAgent extends Agent {
 				shouldTrade = true;
 			}
 		} else {
-			//Prüfen ob requesArray kleiner gleich dem Offer array ist
+			//Prüfen ob requesArray kleiner gleich dem Offer array ist und man das Angebot gebrauchen kann.
 			if (TradingUtils.isNeededOffer(offerArray, frame.getPlayerByColor(name).getNeededRessources(AgentUtils.actionToPriceArray(nextActions.get(0)))) 
 					&& (TradingUtils.sumOfRessources(offerArray) >= TradingUtils.sumOfRessources(requestArray))) {
 				shouldTrade = true;
 			} 
-			//else if (TradingUtils.sumOfRessources(offerArray) >= 2)  {
-			//	shouldTrade = true;
-			//}
 		}
 		return shouldTrade;
 	}
@@ -571,13 +568,12 @@ public class CBRPlayerAgent extends Agent {
 		System.out.println("NAME_: " + name.substring(0,1) +  " Name: " + name);
 		try {
 			if (frame.getActivePlayer().getColor().getBlue() == 255) {
-				if (isSender) {
-					shouldTrade = TradeCB.agentQueryNEW(offerArray, requestArray
-							, frame.getPlayerByColor(name).getNeededRessourcesNEW(AgentUtils.actionToPriceArray(nextActions.get(0)))
-							, name.substring(0,1));
-				} else {
-					shouldTrade = shouldDoTheTradeNEW(requestArray, offerArray, isSender);
-				}		
+				//shouldTrade = TradeCB.agentQueryNEW(offerArray, requestArray
+				//			, frame.getPlayerByColor(name).getNeededRessourcesNEW(AgentUtils.actionToPriceArray(nextActions.get(0)))
+				//			, name.substring(0,1));
+				
+				shouldTrade = shouldDoTheTradeNEW(requestArray, offerArray, isSender);
+				
 			} else {
 				shouldTrade = TradeCB.agentQuery(offerArray
 						, frame.getPlayerByColor(name).getNeededRessources(AgentUtils.actionToPriceArray(nextActions.get(0)))
@@ -586,11 +582,7 @@ public class CBRPlayerAgent extends Agent {
 		} catch (Exception e) {
 			System.out.println("Error Trading Cases using non CBR Ruling.");
 			if (frame.getActivePlayer().getColor().getBlue() == 255) {
-				if (isSender) {
-					shouldTrade = shouldDoTheTradeNEW(requestArray, offerArray, isSender);
-				} else {
-					shouldTrade = shouldDoTheTradeNEW(requestArray, offerArray, isSender);
-				}		
+				shouldTrade = shouldDoTheTradeNEW(requestArray, offerArray, isSender);	
 			} else {
 				if (isSender) {
 					shouldTrade = shouldDoTheTrade(requestArray, offerArray, isSender);

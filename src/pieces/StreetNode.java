@@ -15,6 +15,8 @@ public class StreetNode extends Node{
 	private Polygon clickStreet;
 	
 	private List<StreetNode> adjecentStreetNodes;
+
+	private Node adjacentTown;
 	
 	public StreetNode(int x, int y) {
 		super(x, y);

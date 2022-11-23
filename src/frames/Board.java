@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import Util.BoardEvent;
 import Util.DijkstraReturnPair;
 import Util.DistanceUtils;
+import Util.LongestStreetUtils;
 import enums.BoardEvents;
 import enums.HarbourType;
 import enums.LandType;
@@ -215,6 +216,7 @@ public class Board extends JPanel{
 	public void buildStreet(StreetNode s) {
 		if (s != null && s.getPiece() == null && s.getStreetConnectionRule(frame.getActivePlayer()) && frame.getActivePlayer().canBuildStreet()) {
 			s.setPiece(frame.getActivePlayer().placeStreetPiece(false));
+			LongestStreetUtils.updateLongestStreet(s);
 			notifieListeners(new BoardEvent(BoardEvents.PIECE_PLACED_SUCCESSFULLY));
 		}
 	}

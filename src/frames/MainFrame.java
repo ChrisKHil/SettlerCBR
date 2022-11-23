@@ -21,6 +21,7 @@ import javax.swing.Timer;
 import Util.AgentUtils;
 import Util.BoardEvent;
 import Util.ColorUtils;
+import Util.LongestStreetUtils;
 import Util.Trade;
 import Util.TradingUtils;
 import agents.AgentActionSettler;
@@ -147,6 +148,7 @@ public class MainFrame extends JFrame implements BoardListener {
 				KIColors[i] = ColorUtils.colorToString(player.get(i).getColor());
 			}
 		}
+		LongestStreetUtils.setPlayers(player);
 		Collections.shuffle(player);
 		int i = 0;
 		for(Player p : player) {

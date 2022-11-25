@@ -202,6 +202,7 @@ public class Board extends JPanel{
 		if (c != null && c.getPiece() == null && c.distanceRule() && c.isAtStreet(frame.getActivePlayer()) && frame.getActivePlayer().canBuildTown()) {
 			c.setPiece(frame.getActivePlayer().placeTownPiece(false));
 			frame.getActivePlayer().addHardbour(c.getHarbourType());
+			//LongestStreetUtils.reevaluateLongestStreet(c);
 			notifieListeners(new BoardEvent(BoardEvents.PIECE_PLACED_SUCCESSFULLY));
 		}
 	}

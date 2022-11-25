@@ -1,11 +1,14 @@
 package Util;
 
+import pieces.StreetNode;
 import player.Player;
 
 public class LongestStreetWrapper {
 
     private Player player;
     private int longestStreet;
+    // private StreetNode firstStreet;
+    // private StreetNode secondStreet;
 
     public LongestStreetWrapper(Player player, int length) {
         this.player = player;
